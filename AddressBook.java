@@ -1,5 +1,8 @@
 package com.company.AddressBook;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -332,6 +335,37 @@ public class AddressBook {
         }
     }
 
+    public void writeintoJsonFile() throws IOException {
+        JSONObject obj=new JSONObject();
+        try {
+            for(Contact c: list) {
+                obj.put("First name: ", c.getFirstName());
+                obj.put("Last name: ",c.getLastName());
+                obj.put("Address: ",c.getAddress());
+                obj.put("City: ", c.getCity());
+                obj.put("State: ", c.getState());
+                obj.put("Zipcode: ", c.getZip());
+                obj.put("Phone-number: ", c.getPhoneNumber());
+                obj.put("Email: ", c.getEmail());
+                FileWriter writer=new FileWriter(String.valueOf(Paths.get("Addressbook.json")));
+                writer.write(obj.toJSONString());
+                writer.flush();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readfromJsonFile()throws IOException{
+        FileReader reader=new FileReader(String.valueOf(Paths.get("Addressbook.json")));
+        JSONParser jparse=new JSONParser();
+        try {
+            System.out.println(jparse.parse(reader));
+        } catch (IOException  | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sortbyCity() {
         System.out.println("\n After Sorting the contact details by City : \n");
         List<Contact> SortedList = list.stream()
@@ -421,8 +455,10 @@ public class AddressBook {
                         address.AddDetails();
                         address.writeData();
                         address.writeCSVFile();
+                        address.writeintoJsonFile();
                         address.readCsvFile();
                         address.readData();
+                        address.readfromJsonFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
