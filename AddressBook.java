@@ -1,5 +1,8 @@
 package com.company.AddressBook;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -267,6 +270,67 @@ public class AddressBook {
         Files.lines(Paths.get("addressBook.txt")).forEach(System.out::println);
     }
 
+    public void writeCSVFile() throws IOException{
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(String.valueOf(Paths.get("addressBook.csv")));
+
+            fileWriter.append("First Name, Last Name, Address, City, State, Zip, Phone-Number, Email\n");
+
+            for(Contact g: list) {
+                fileWriter.append(g.getFirstName());
+                fileWriter.append(",");
+                fileWriter.append(g.getLastName());
+                fileWriter.append(",");
+                fileWriter.append(g.getAddress());
+                fileWriter.append(",");
+                fileWriter.append(g.getCity());
+                fileWriter.append(",");
+                fileWriter.append(g.getState());
+                fileWriter.append(",");
+                fileWriter.append(g.getZip());
+                fileWriter.append(",");
+                fileWriter.append(g.getPhoneNumber());
+                fileWriter.append(",");
+                fileWriter.append(g.getEmail());
+                fileWriter.append(",");
+                fileWriter.append("\n");
+            }
+        } catch (Exception execption) {
+            execption.printStackTrace();
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void readCsvFile() throws IOException {
+        BufferedReader reader = null;
+        try {
+            String line = "";
+            reader = new BufferedReader(new FileReader(String.valueOf(Paths.get("addressBook.csv"))));
+            while ((line = reader.readLine()) != null) {
+                String[] details = line.split(",");
+                if (details.length > 0) {
+                    Contact P1 = new Contact(details[0], details[1], details[2], details[3], details[4], details[5],
+                            details[6], details[7]);
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void sortbyCity() {
         System.out.println("\n After Sorting the contact details by City : \n");
@@ -356,6 +420,8 @@ public class AddressBook {
                     try {
                         address.AddDetails();
                         address.writeData();
+                        address.writeCSVFile();
+                        address.readCsvFile();
                         address.readData();
                     } catch (IOException e) {
                         e.printStackTrace();
