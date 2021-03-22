@@ -1,11 +1,5 @@
 package com.company.AddressBook;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -202,37 +196,7 @@ public class AddressBook {
 
     }
 
-    @SuppressWarnings("unchecked")
-    public void writeintoJsonFile() throws IOException {
-        JSONObject obj=new JSONObject();
-        try {
-            for(Contact c: list) {
-                obj.put("First name: ", c.getFirstName());
-                obj.put("Last name: ",c.getLastName());
-                obj.put("Address: ",c.getAddress());
-                obj.put("City: ", c.getCity());
-                obj.put("State: ", c.getState());
-                obj.put("Zipcode: ", c.getZip());
-                obj.put("Phone-number: ", c.getPhoneNumber());
-                obj.put("Email: ", c.getEmail());
-                FileWriter writer=new FileWriter(String.valueOf(Paths.get("Addressbook.json")));
-                writer.write(obj.toJSONString());
-                writer.flush();
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void readfromJsonFile()throws IOException{
-        FileReader reader=new FileReader(String.valueOf(Paths.get("Addressbook.json")));
-        JSONParser jparse=new JSONParser();
-        try {
-            System.out.println(jparse.parse(reader));
-        } catch (IOException  | org.json.simple.parser.ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void PersonStateDictionary() {
         for (AddressBook address : book) {
@@ -252,69 +216,6 @@ public class AddressBook {
         System.out.println("Count of contacts in " + state + " state is: " + count);
     }
 
-
-
-    public void writeCSVFile() throws IOException{
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(String.valueOf(Paths.get("addressBook.csv")));
-
-            fileWriter.append("First Name, Last Name, Address, City, State, Zip, Phone-Number, Email\n");
-
-            for(Contact g: list) {
-                fileWriter.append(g.getFirstName());
-                fileWriter.append(",");
-                fileWriter.append(g.getLastName());
-                fileWriter.append(",");
-                fileWriter.append(g.getAddress());
-                fileWriter.append(",");
-                fileWriter.append(g.getCity());
-                fileWriter.append(",");
-                fileWriter.append(g.getState());
-                fileWriter.append(",");
-                fileWriter.append(g.getZip());
-                fileWriter.append(",");
-                fileWriter.append(g.getPhoneNumber());
-                fileWriter.append(",");
-                fileWriter.append(g.getEmail());
-                fileWriter.append(",");
-                fileWriter.append("\n");
-            }
-        } catch (Exception execption) {
-            execption.printStackTrace();
-        } finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void readCsvFile() throws IOException {
-        BufferedReader reader = null;
-        try {
-            String line = "";
-            reader = new BufferedReader(new FileReader(String.valueOf(Paths.get("addressBook.csv"))));
-            while ((line = reader.readLine()) != null) {
-                String[] details = line.split(",");
-                if (details.length > 0) {
-                    Contact P1 = new Contact(details[0], details[1], details[2], details[3], details[4], details[5],
-                            details[6], details[7]);
-
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
 
     private void AddDetails() {
@@ -455,11 +356,7 @@ public class AddressBook {
                     try {
                         address.AddDetails();
                         address.writeData();
-                        address.writeintoJsonFile();
-                        address.writeCSVFile();
                         address.readData();
-                        address.readCsvFile();
-                        address.readfromJsonFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
